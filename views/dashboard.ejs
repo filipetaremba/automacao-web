@@ -1,0 +1,62 @@
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<h1>Dashboard</h1>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3><%= bookStats.pending %></h3>
+        <p>📚 Livros Pendentes</p>
+    </div>
+    <div class="stat-card">
+        <h3><%= bookStats.sent %></h3>
+        <p>✅ Livros Enviados</p>
+    </div>
+    <div class="stat-card">
+        <h3><%= bookStats.error %></h3>
+        <p>❌ Com Erro</p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Status do Sistema</h2>
+    <p><strong>WhatsApp:</strong> <%= whatsappInfo.isReady ? '✅ Conectado' : '❌ Desconectado' %></p>
+    <p><strong>Agendador:</strong> <%= schedulerStatus.isRunning ? '✅ Ativo' : '❌ Inativo' %></p>
+    <% if (schedulerStatus.nextExecution) { %>
+        <p><strong>Próximo envio:</strong> <%= schedulerStatus.nextExecution %></p>
+    <% } %>
+    <% if (schedulerStats && schedulerStats.lastSendDate) { %>
+        <p><strong>Último envio:</strong> <%= schedulerStats.lastSendDate %></p>
+    <% } %>
+</div>
+
+<div class="card">
+    <h2>Últimos Envios</h2>
+    <% if (recentLogs && recentLogs.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Livro</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% recentLogs.forEach(log => { %>
+                    <tr>
+                        <td><%= log.book_title || 'N/A' %></td>
+                        <td>
+                            <span class="badge <%= log.status === 'success' ? 'badge-sent' : 'badge-error' %>">
+                                <%= log.status %>
+                            </span>
+                        </td>
+                        <td><%= new Date(log.sent_at).toLocaleString('pt-BR') %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Nenhum envio realizado ainda.</p>
+    <% } %>
+</div>

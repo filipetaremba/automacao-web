@@ -1,0 +1,50 @@
+<h1><%= book ? 'Editar Livro' : 'Adicionar Livro' %></h1>
+
+<% if (error) { %>
+    <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="card">
+    <form method="POST" action="<%= book ? '/books/edit/' + book.id : '/books' %>" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Título *</label>
+            <input type="text" name="title" value="<%= book ? book.title : '' %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Autor *</label>
+            <input type="text" name="author" value="<%= book ? book.author : '' %>" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Páginas</label>
+            <input type="number" name="pages" value="<%= book ? book.pages || '' : '' %>">
+        </div>
+        
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="description"><%= book ? book.description || '' : '' %></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label>Capa (Imagem) <%= book ? '' : '*' %></label>
+            <input type="file" name="cover" accept="image/*" <%= book ? '' : 'required' %>>
+            <% if (book) { %>
+                <small>Deixe em branco para manter a capa atual</small>
+            <% } %>
+        </div>
+        
+        <div class="form-group">
+            <label>PDF <%= book ? '' : '*' %></label>
+            <input type="file" name="pdf" accept=".pdf" <%= book ? '' : 'required' %>>
+            <% if (book) { %>
+                <small>Deixe em branco para manter o PDF atual</small>
+            <% } %>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">
+            <%= book ? 'Atualizar' : 'Adicionar' %> Livro
+        </button>
+        <a href="/books" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

@@ -1,0 +1,64 @@
+<% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin: 20px 0;">
+    <h1>Livros</h1>
+    <a href="/books/new" class="btn btn-primary">+ Adicionar Livro</a>
+</div>
+
+<div class="stats">
+    <div class="stat-card">
+        <h3><%= stats.pending %></h3>
+        <p>Pendentes</p>
+    </div>
+    <div class="stat-card">
+        <h3><%= stats.sent %></h3>
+        <p>Enviados</p>
+    </div>
+    <div class="stat-card">
+        <h3><%= stats.error %></h3>
+        <p>Com Erro</p>
+    </div>
+</div>
+
+<div class="card">
+    <% if (books.length > 0) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% books.forEach(book => { %>
+                    <tr>
+                        <td><strong><%= book.title %></strong></td>
+                        <td><%= book.author %></td>
+                        <td>
+                            <span class="badge badge-<%= book.status %>">
+                                <%= book.status %>
+                            </span>
+                        </td>
+                        <td><%= new Date(book.created_at).toLocaleDateString('pt-BR') %></td>
+                        <td>
+                            <a href="/books/edit/<%= book.id %>" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Editar</a>
+                            <form method="POST" action="/books/delete/<%= book.id %>" style="display: inline;" onsubmit="return confirm('Tem certeza?')">
+                                <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">Deletar</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } else { %>
+        <p>Nenhum livro cadastrado ainda.</p>
+    <% } %>
+</div>

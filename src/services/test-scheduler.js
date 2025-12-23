@@ -47,7 +47,7 @@ async function testScheduler() {
         
         console.log('⏳ Aguardando conexão...');
         while (!whatsappService.isClientReady()) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         console.log('✅ WhatsApp conectado');
 
