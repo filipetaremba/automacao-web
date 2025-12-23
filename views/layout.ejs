@@ -60,18 +60,20 @@
     </style>
 </head>
 <body>
-    <!-- <div class="navbar">
-        <div class="container">
-            <h1>📚 WhatsApp Books Bot</h1>
-            <nav>
-                <a href="/">Dashboard</a>
-                <a href="/books">Livros</a>
-                <a href="/settings">Configurações</a>
-                <a href="/logout">Sair</a>
-            </nav>
+    <% if (typeof isAuthenticated !== 'undefined' && isAuthenticated) { %>
+        <div class="navbar">
+            <div class="container">
+                <h1>📚 WhatsApp Books Bot</h1>
+                <nav>
+                    <a href="/">Dashboard</a>
+                    <a href="/books">Livros</a>
+                    <a href="/settings">Configurações</a>
+                    <a href="/logout">Sair</a>
+                </nav>
+            </div>
         </div>
-    </div>
-     -->
+    <% } %>
+    
     <div class="container">
         <%- body %>
     </div>

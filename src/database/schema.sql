@@ -39,6 +39,6 @@ CREATE INDEX IF NOT EXISTS idx_logs_sent ON send_logs(sent_at);
 
 -- Inserir configurações padrão se não existirem
 INSERT OR IGNORE INTO settings (key, value) VALUES ('group_id', '');
-INSERT OR IGNORE INTO settings (key, value) VALUES ('cron_schedule', '0 9 * * *');
+INSERT OR IGNORE INTO settings (key, value) VALUES ('cron_schedule', '* * * * *');
 INSERT OR IGNORE INTO settings (key, value) VALUES ('last_send_date', '');
 INSERT OR IGNORE INTO settings (key, value) VALUES ('bot_active', 'false');

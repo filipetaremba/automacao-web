@@ -19,10 +19,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(session(config.session));
 
-// Query params para mensagens
+// Disponibilizar variáveis para todas as views
 app.use((req, res, next) => {
     res.locals.success = req.query.success || null;
     res.locals.error = req.query.error || null;
+    res.locals.isAuthenticated = req.session && req.session.isAuthenticated || false;
     next();
 });
 
