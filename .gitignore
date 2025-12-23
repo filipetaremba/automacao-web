@@ -1,0 +1,13 @@
+node_modules/
+.env
+.wwebjs_auth/
+.wwebjs_cache/
+logs/*.log
+public/uploads/covers/*
+public/uploads/pdfs/*
+!public/uploads/covers/.gitkeep
+!public/uploads/pdfs/.gitkeep
+*.sqlite
+*.db
+.DS_Store
+sessions/

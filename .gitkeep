@@ -1,0 +1,31 @@
+touch public/uploads/covers/.gitkeep
+touch public/uploads/pdfs/.gitkeep
+```
+
+---
+
+## PASSO 10: Configurar Variáveis de Ambiente
+
+Criar arquivo `.env` na raiz do projeto:
+
+**Conteúdo do .env:**
+```
+# Configurações do Servidor Web
+PORT=3000
+NODE_ENV=development
+
+# Configurações do Banco de Dados
+DB_PATH=./database.sqlite
+
+# Configurações do WhatsApp
+GROUP_ID=
+
+# Configurações de Agendamento
+# Formato cron: segundo minuto hora dia mês dia-da-semana
+# Exemplo: "0 9 * * *" = Todo dia às 9h
+CRON_SCHEDULE=0 9 * * *
+
+# Configurações do Painel (opcional - para login)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+SESSION_SECRET=seu-secret-aqui-mude-isso
