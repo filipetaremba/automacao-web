@@ -114,6 +114,79 @@ const bookController = {
         } catch (error) {
             res.redirect('/books?error=' + error.message);
         }
+    },
+    updateStatus: async (req, res) => {
+        try {
+            const { status } = req.body;
+            const bookId = req.params.id;
+            
+            if (!['pending', 'sent', 'error'].includes(status)) {
+                throw new Error('Status inválido');
+            }
+
+            const sentAt = status === 'sent' ? new Date().toISOString() : null;
+            await updateBookStatus(bookId, status, sentAt);
+            
+            res.redirect('/books?success=Status atualizado com sucesso!');
+        } catch (error) {
+            res.redirect('/books?error=' + error.message);
+        }
+    },
+
+    sendBookNow: async (req, res) => {
+        try {
+            const bookId = req.params.id;
+            const book = await getBookById(bookId);
+            
+            if (!book) {
+                return res.json({ success: false, message: 'Livro não encontrado' });
+            }
+
+            const whatsappService = require('../services/whatsapp');
+            const { getSetting, addLog } = require('../database/queries');
+            
+            // Verificar se WhatsApp está pronto
+            if (!whatsappService.isClientReady()) {
+                return res.json({ success: false, message: 'WhatsApp não está conectado' });
+            }
+
+            // Buscar GROUP_ID
+            const groupId = await getSetting('group_id');
+            if (!groupId) {
+                return res.json({ success: false, message: 'GROUP_ID não configurado' });
+            }
+
+            // Preparar dados do livro
+            const bookData = {
+                id: book.id,
+                title: book.title,
+                author: book.author,
+                pages: book.pages,
+                description: book.description,
+                coverPath: book.cover_path,
+                pdfPath: book.pdf_path
+            };
+
+            // Enviar livro
+            await whatsappService.sendBook(groupId, bookData);
+
+            // Atualizar status
+            const now = new Date().toISOString();
+            await updateBookStatus(book.id, 'sent', now);
+            await addLog(book.id, 'success', null);
+
+            res.json({ success: true, message: 'Livro enviado com sucesso!' });
+        } catch (error) {
+            console.error('Erro ao enviar livro:', error);
+            
+            // Registrar erro
+            try {
+                const { addLog } = require('../database/queries');
+                await addLog(req.params.id, 'error', error.message);
+            } catch (e) {}
+            
+            res.json({ success: false, message: error.message });
+        }
     }
 };
 

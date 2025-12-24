@@ -43,15 +43,30 @@
                         <td><strong><%= book.title %></strong></td>
                         <td><%= book.author %></td>
                         <td>
-                            <span class="badge badge-<%= book.status %>">
-                                <%= book.status %>
-                            </span>
+                            <form method="POST" action="/books/status/<%= book.id %>" style="display: inline;">
+                                <select name="status" onchange="this.form.submit()" style="padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+                                    <option value="pending" <%= book.status === 'pending' ? 'selected' : '' %>>⏳ Pendente</option>
+                                    <option value="sent" <%= book.status === 'sent' ? 'selected' : '' %>>✅ Enviado</option>
+                                    <option value="error" <%= book.status === 'error' ? 'selected' : '' %>>❌ Erro</option>
+                                </select>
+                            </form>
                         </td>
                         <td><%= new Date(book.created_at).toLocaleDateString('pt-BR') %></td>
-                        <td>
-                            <a href="/books/edit/<%= book.id %>" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">Editar</a>
-                            <form method="POST" action="/books/delete/<%= book.id %>" style="display: inline;" onsubmit="return confirm('Tem certeza?')">
-                                <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">Deletar</button>
+                        <td style="white-space: nowrap;">
+                            <button 
+                                class="btn btn-primary send-now-btn" 
+                                data-book-id="<%= book.id %>" 
+                                data-book-title="<%= book.title %>"
+                                style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                📤 Enviar Agora
+                            </button>
+                            <a href="/books/edit/<%= book.id %>" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                ✏️ Editar
+                            </a>
+                            <form method="POST" action="/books/delete/<%= book.id %>" style="display: inline;" onsubmit="return confirm('Tem certeza que deseja deletar este livro?')">
+                                <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 12px;">
+                                    🗑️ Deletar
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -62,3 +77,59 @@
         <p>Nenhum livro cadastrado ainda.</p>
     <% } %>
 </div>
+
+<div id="send-result" style="margin-top: 20px;"></div>
+
+<script>
+    // Adicionar evento a todos os botões "Enviar Agora"
+    document.querySelectorAll('.send-now-btn').forEach(button => {
+        button.addEventListener('click', async function() {
+            const bookId = this.getAttribute('data-book-id');
+            const bookTitle = this.getAttribute('data-book-title');
+            
+            if (!confirm(`Deseja enviar o livro "${bookTitle}" AGORA para o grupo do WhatsApp?`)) {
+                return;
+            }
+            
+            const resultDiv = document.getElementById('send-result');
+            resultDiv.innerHTML = '<div class="alert alert-success">📤 Enviando livro "' + bookTitle + '"...</div>';
+            
+            try {
+                const response = await fetch(`/books/send-now/${bookId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = '<div class="alert alert-success">✅ ' + data.message + '</div>';
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    resultDiv.innerHTML = '<div class="alert alert-error">❌ ' + data.message + '</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="alert alert-error">❌ Erro: ' + error.message + '</div>';
+            }
+        });
+    });
+</script>
+
+<style>
+    select {
+        cursor: pointer;
+        background: white;
+    }
+    
+    select:hover {
+        border-color: #25D366;
+    }
+    
+    .btn {
+        cursor: pointer;
+    }
+</style>

@@ -12,6 +12,10 @@ router.get('/login', isNotAuthenticated, authController.showLogin);
 router.post('/login', isNotAuthenticated, authController.login);
 router.get('/logout', authController.logout);
 
+// Status e envio individual
+router.post('/books/status/:id', isAuthenticated, bookController.updateStatus);
+router.post('/books/send-now/:id', isAuthenticated, bookController.sendBookNow);
+
 // Rotas protegidas
 router.get('/', isAuthenticated, dashboardController.showDashboard);
 
