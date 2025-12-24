@@ -298,7 +298,7 @@ class WhatsAppService {
      * Formata a legenda da mensagem do livro
      */
     formatBookCaption(bookData) {
-        let caption = `📚 *${bookData.title}*\n\n`;
+        let caption = `📚 *Titulo:* *${bookData.title}*\n\n`;
         caption += `✍️ *Autor:* ${bookData.author}\n`;
         
         if (bookData.pages) {
