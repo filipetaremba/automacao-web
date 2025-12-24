@@ -241,8 +241,7 @@ class WhatsAppService {
             
             // Enviar como documento
             await this.client.sendMessage(groupId, media, {
-                sendMediaAsDocument: true,
-                caption: name
+                sendMediaAsDocument: true
             });
             
             console.log('✅ PDF enviado com sucesso');
@@ -301,9 +300,6 @@ class WhatsAppService {
         let caption = `📚 *Titulo:* *${bookData.title}*\n\n`;
         caption += `✍️ *Autor:* ${bookData.author}\n`;
         
-        if (bookData.pages) {
-            caption += `📄 *Páginas:* ${bookData.pages}\n`;
-        }
         
         if (bookData.description) {
             caption += `\n📖 *Descrição:*\n${bookData.description}\n`;

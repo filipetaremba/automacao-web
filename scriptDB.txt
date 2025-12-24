@@ -1,0 +1,35 @@
+-- Tabela de livros
+CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    author TEXT NOT NULL,
+    pages INTEGER,
+    description TEXT,
+    cover_path TEXT NOT NULL,
+    pdf_path TEXT NOT NULL,
+    status TEXT DEFAULT 'pending',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    sent_at DATETIME
+);
+
+-- Tabela de configurações
+CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de logs de envio
+CREATE TABLE IF NOT EXISTS send_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    error_message TEXT,
+    sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+-- Índices para melhor performance
+CREATE INDEX IF NOT EXISTS idx_books_status ON books(status);
+CREATE INDEX IF NOT EXISTS idx_books_created ON books(created_at);
+CREATE INDEX IF NOT EXISTS idx_logs_book ON send_logs(book_id);
